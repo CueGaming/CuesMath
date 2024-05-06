@@ -39,7 +39,54 @@
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
     <canvas id="gameCanvas" width="300" height="600"></canvas>
     <script>
-        // Add your Tetris game code here
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const blockSize = 30;
+        const boardWidth = 10;
+        const boardHeight = 20;
+        const board = [];
+        const colors = ['cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'];
+
+        function drawBlock(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(x * blockSize, y * blockSize, blockSize, blockSize);
+        }
+
+        function drawBoard() {
+            for (let y = 0; y < boardHeight; y++) {
+                for (let x = 0; x < boardWidth; x++) {
+                    if (board[y][x]) {
+                        drawBlock(x, y, colors[board[y][x] - 1]);
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBoard();
+            // Add code to draw falling block
+        }
+
+        function update() {
+            // Add code to update game state
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function startGame() {
+            for (let y = 0; y < boardHeight; y++) {
+                board.push(Array(boardWidth).fill(0));
+            }
+            gameLoop();
+        }
+
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -49,6 +96,8 @@
                 }
             }
         }
+
+        startGame();
     </script>
 </body>
 </html>
