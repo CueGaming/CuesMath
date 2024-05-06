@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; /* Change font family as needed */
+    background-color: #f0f0f0; /* Change background color */
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px; /* Change font size */
+    color: #333; /* Change text color */
+}
+
+.line {
+    width: 50px;
+    border-top: 2px solid #888; /* Change line color */
+    margin: 10px auto;
+}
