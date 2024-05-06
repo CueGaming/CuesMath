@@ -8,12 +8,17 @@
         body {
             margin: 0;
             overflow: hidden;
+            background-image: url('cookiebackground.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
         }
         canvas {
             border: 1px solid black;
             display: block;
             margin: auto;
-            background-color: skyblue;
+            background-image: url('cookie.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
         }
         .title {
             position: absolute;
@@ -21,6 +26,7 @@
             left: 20px;
             font-size: 24px;
             color: white;
+            z-index: 1;
         }
         .fullscreen-btn {
             position: absolute;
@@ -35,19 +41,101 @@
         }
         .upgrade-btn {
             display: block;
-            margin: 10px auto;
+            margin: 10px;
             padding: 10px;
             background-color: #333;
             color: white;
             border: none;
             cursor: pointer;
+            width: 200px;
+        }
+        .upgrade-container {
+            position: absolute;
+            left: 20px;
+            top: 80px;
+            width: 250px;
+            overflow-y: scroll;
+            max-height: calc(100% - 100px);
+        }
+        .cookie-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 48px;
+            color: white;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            animation: scaleUp 0.5s ease-in-out;
+        }
+        @keyframes scaleUp {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .celebration-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 64px;
+            color: gold;
+            opacity: 0;
+            z-index: 2;
+            pointer-events: none;
+            animation: celebrate 1.5s ease-in-out;
+        }
+        @keyframes celebrate {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
     <h1 class="title" id="bakeryName">Cookie Clicker</h1>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
+    <div class="upgrade-container">
+        <!-- Buttons to buy upgrades -->
+        <!-- Cursor upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Reinforced index finger', 100, 2)">Buy Reinforced Index Finger (Cost: 100 cookies)</button>
+        <!-- Add more buttons for other cursor upgrades -->
+        <!-- Grandma upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Forwards from grandma', 1000, 2)">Buy Forwards from Grandma (Cost: 1,000 cookies)</button>
+        <!-- Add more buttons for other grandma upgrades -->
+        <!-- Farm upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Cheap hoes', 11000, 2)">Buy Cheap Hoes (Cost: 11,000 cookies)</button>
+        <!-- Add more buttons for other farm upgrades -->
+        <!-- Mine upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Sugar gas', 120000, 2)">Buy Sugar Gas (Cost: 120,000 cookies)</button>
+        <!-- Add more buttons for other mine upgrades -->
+        <!-- Factory upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Sturdier conveyor belts', 1300000, 2)">Buy Sturdier Conveyor Belts (Cost: 1,300,000 cookies)</button>
+        <!-- Add more buttons for other factory upgrades -->
+        <!-- Bank upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Taller tellers', 14000000, 2)">Buy Taller Tellers (Cost: 14,000,000 cookies)</button>
+        <!-- Add more buttons for other bank upgrades -->
+        <!-- Temple upgrades -->
+        <button class="upgrade-btn" onclick="buyUpgrade('Golden idols', 200000000, 2)">Buy Golden Idols (Cost: 200,000,000 cookies)</button>
+        <!-- Add more buttons for other temple upgrades -->
+    </div>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div class="cookie-counter" id="cookieCounter">0</div>
+    <div class="celebration-animation" id="celebrationAnimation"></div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -56,40 +144,69 @@
         let cookies = 0;
         let cookieMultiplier = 1;
         let bakeryName = "Cookie Clicker";
-        let cursorCount = 0;
-        let grandmaCount = 0;
-        let farmCount = 0;
-        let mineCount = 0;
-        let factoryCount = 0;
-        let bankCount = 0;
-        let templeCount = 0;
 
         // Function to draw cookies
         function drawCookie() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "brown";
+            ctx.fillStyle = "white";
+            ctx.font = "24px Arial";
+            ctx.fillText("Cookies: " + cookies, 10, 30);
             ctx.beginPath();
             ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
             ctx.fill();
-            ctx.closePath();
-            ctx.fillStyle = "white";
-            ctx.font = "20px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText("Click Me", canvas.width / 2, canvas.height / 2 + 8);
-            ctx.fillText("Cookies: " + cookies, canvas.width / 2, 50);
         }
 
-        // Function to handle clicking on the cookie
-        canvas.addEventListener('click', function(event) {
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+        // Function to update cookies
+        function updateCookies() {
+            cookies += cookieMultiplier;
+            drawCookie();
+            updateCookieCounter(cookies);
+            checkMilestone();
+        }
 
-            if (Math.sqrt(Math.pow(x - (canvas.width / 2), 2) + Math.pow(y - (canvas.height / 2), 2)) <= 50) {
-                cookies += cookieMultiplier;
+        // Function to buy upgrades
+        function buyUpgrade(upgradeName, cost, multiplier) {
+            if (cookies >= cost) {
+                cookies -= cost;
+                cookieMultiplier += multiplier;
                 drawCookie();
+                updateCookieCounter(cookies);
+                checkMilestone();
+                console.log("Bought " + upgradeName);
+            } else {
+                console.log("Not enough cookies to buy " + upgradeName);
             }
-        });
+        }
+
+        // Function to update the cookie counter
+        function updateCookieCounter(value) {
+            const counter = document.getElementById('cookieCounter');
+            counter.textContent = value;
+            counter.classList.remove('cookie-counter-animation');
+            void counter.offsetWidth; // Trigger reflow to restart animation
+            counter.classList.add('cookie-counter-animation');
+        }
+
+        // Function to check for milestones
+        function checkMilestone() {
+            // Example: Celebrate when cookies reach a certain milestone
+            if (cookies === 1000) {
+                celebrate("You've reached 1,000 cookies!");
+            } else if (cookies === 5000) {
+                celebrate("You've reached 5,000 cookies!");
+            }
+            // Add more milestone checks as needed
+        }
+
+        // Function to display celebration animation
+        function celebrate(message) {
+            const celebration = document.getElementById('celebrationAnimation');
+            celebration.textContent = message;
+            celebration.style.opacity = 1;
+            setTimeout(() => {
+                celebration.style.opacity = 0;
+            }, 1500);
+        }
 
         // Function to toggle full screen
         function toggleFullScreen() {
@@ -102,18 +219,6 @@
             }
         }
 
-        // Function to buy upgrades
-        function buyUpgrade(upgradeName, upgradePrice, upgradeMultiplier) {
-            if (cookies >= upgradePrice) {
-                cookies -= upgradePrice;
-                cookieMultiplier *= upgradeMultiplier;
-                drawCookie();
-                alert("You purchased the " + upgradeName + " upgrade!");
-            } else {
-                alert("Not enough cookies to buy upgrade!");
-            }
-        }
-
         // Function to change bakery name
         function changeBakeryName() {
             bakeryName = prompt("Enter new bakery name:", bakeryName);
@@ -123,42 +228,5 @@
         // Initial draw
         drawCookie();
     </script>
-    <!-- Buttons to buy upgrades -->
-    <!-- Cursor upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Reinforced index finger', 100, 2)">Buy Reinforced Index Finger (Cost: 100 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Carpal tunnel prevention cream', 500, 2)">Buy Carpal Tunnel Prevention Cream (Cost: 500 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Ambidextrous', 10000, 2)">Buy Ambidextrous (Cost: 10,000 cookies)</button>
-    <!-- Add more buttons for other cursor upgrades -->
-    <!-- Grandma upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Forwards from grandma', 1000, 2)">Buy Forwards from Grandma (Cost: 1,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Steel-plated rolling pins', 5000, 2)">Buy Steel-plated Rolling Pins (Cost: 5,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Lubricated dentures', 25000, 2)">Buy Lubricated Dentures (Cost: 25,000 cookies)</button>
-    <!-- Add more buttons for other grandma upgrades -->
-    <!-- Farm upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Cheap hoes', 11000, 2)">Buy Cheap Hoes (Cost: 11,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Fertilizer', 55000, 2)">Buy Fertilizer (Cost: 55,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Cookie trees', 550000, 2)">Buy Cookie Trees (Cost: 550,000 cookies)</button>
-    <!-- Add more buttons for other farm upgrades -->
-    <!-- Mine upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Sugar gas', 120000, 2)">Buy Sugar Gas (Cost: 120,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Megadrill', 600000, 2)">Buy Megadrill (Cost: 600,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Ultradrill', 6000000, 2)">Buy Ultradrill (Cost: 6,000,000 cookies)</button>
-    <!-- Add more buttons for other mine upgrades -->
-    <!-- Factory upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Sturdier conveyor belts', 1300000, 2)">Buy Sturdier Conveyor Belts (Cost: 1,300,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Child labor', 6500000, 2)">Buy Child Labor (Cost: 6,500,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Sweatshop', 65000000, 2)">Buy Sweatshop (Cost: 65,000,000 cookies)</button>
-    <!-- Add more buttons for other factory upgrades -->
-    <!-- Bank upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Taller tellers', 14000000, 2)">Buy Taller Tellers (Cost: 14,000,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Scissor-resistant credit cards', 70000000, 2)">Buy Scissor-Resistant Credit Cards (Cost: 70,000,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Acid-proof vaults', 700000000, 2)">Buy Acid-Proof Vaults (Cost: 700,000,000 cookies)</button>
-    <!-- Add more buttons for other bank upgrades -->
-    <!-- Temple upgrades -->
-    <button class="upgrade-btn" onclick="buyUpgrade('Golden idols', 200000000, 2)">Buy Golden Idols (Cost: 200,000,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Sacrifices', 1000000000, 2)">Buy Sacrifices (Cost: 1,000,000,000 cookies)</button>
-    <button class="upgrade-btn" onclick="buyUpgrade('Delicious blessing', 10000000000, 2)">Buy Delicious Blessing (Cost: 10,000,000,000 cookies)</button>
-    <!-- Add more buttons for other temple upgrades -->
-    <button class="upgrade-btn" onclick="changeBakeryName()">Change Bakery Name</button>
 </body>
 </html>
