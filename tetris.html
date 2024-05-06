@@ -42,6 +42,13 @@
             cursor: pointer;
             border-radius: 15px;
         }
+        .score {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 20px;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +58,7 @@
     <button onclick="moveLeft()" class="control-btn">Left</button>
     <button onclick="moveRight()" class="control-btn">Right</button>
     <button onclick="rotate()" class="control-btn">Rotate</button>
+    <div class="score" id="score">Score: 0</div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -75,6 +83,7 @@
         let currentX;
         let currentY;
         let gameInterval;
+        let score = 0;
 
         function drawBlock(x, y, color) {
             ctx.fillStyle = color;
@@ -119,7 +128,9 @@
                 // Lock shape in place
                 lockShape();
                 // Check for lines to clear
-                clearLines();
+                const linesCleared = clearLines();
+                // Update score
+                updateScore(linesCleared);
                 // Generate a new shape
                 newShape();
             }
@@ -147,12 +158,20 @@
         }
 
         function clearLines() {
+            let linesCleared = 0;
             for (let y = boardHeight - 1; y >= 0; y--) {
                 if (board[y].every(cell => cell !== 0)) {
                     board.splice(y, 1);
                     board.unshift(Array(boardWidth).fill(0));
+                    linesCleared++;
                 }
             }
+            return linesCleared;
+        }
+
+        function updateScore(linesCleared) {
+            score += linesCleared * 100;
+            document.getElementById('score').textContent = 'Score: ' + score;
         }
 
         function newShape() {
