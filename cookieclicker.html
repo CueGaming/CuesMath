@@ -13,7 +13,7 @@
             background-repeat: no-repeat;
         }
         canvas {
-            border: 1px solid black;
+            border: none; /* Remove the border */
             display: block;
             margin: auto;
             background-image: url('cookie.webp');
@@ -154,9 +154,8 @@
             ctx.fillStyle = "white";
             ctx.font = "24px Arial";
             ctx.fillText("Cookies: " + cookies, 10, 30);
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 200, 0, Math.PI * 2); /* Adjust size of cookie */
-            ctx.fill();
+            // Draw cookie without outline and inner circle
+            ctx.drawImage(canvas.background, 0, 0, canvas.width, canvas.height);
         }
 
         // Function to update cookies
