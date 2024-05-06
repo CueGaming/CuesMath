@@ -13,8 +13,7 @@
             border: 1px solid black;
             display: block;
             margin: auto;
-            background-image: url('background.png'); /* Replace 'background.png' with the path to your background image */
-            background-size: cover;
+            background-color: skyblue;
         }
         .title {
             position: absolute;
@@ -48,11 +47,13 @@
         let birdSpeedY = 0;
         const gravity = 0.5;
         const jump = -8;
-        let obstacles = [];
-        const obstacleWidth = 50;
-        const obstacleGap = 200;
-        const obstacleSpeed = 2;
+        let pipes = [];
+        const pipeWidth = 50;
+        const pipeGap = 200;
+        const pipeSpeed = 2;
         let gameOver = false;
+        let lastPipeTime = 0;
+        const minPipeDistance = 200; // Minimum distance between pipes
 
         function drawBird() {
             ctx.fillStyle = 'yellow';
@@ -61,11 +62,11 @@
             ctx.fill();
         }
 
-        function drawObstacles() {
+        function drawPipes() {
             ctx.fillStyle = 'green';
-            obstacles.forEach(obstacle => {
-                ctx.fillRect(obstacle.x, 0, obstacleWidth, obstacle.topHeight);
-                ctx.fillRect(obstacle.x, obstacle.topHeight + obstacleGap, obstacleWidth, canvas.height - obstacle.topHeight - obstacleGap);
+            pipes.forEach(pipe => {
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+                ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
             });
         }
 
@@ -78,24 +79,25 @@
             }
         }
 
-        function updateObstacles() {
-            obstacles.forEach(obstacle => {
-                obstacle.x -= obstacleSpeed;
+        function updatePipes() {
+            pipes.forEach(pipe => {
+                pipe.x -= pipeSpeed;
 
-                if (obstacle.x + obstacleWidth < 0) {
-                    obstacles.shift();
+                if (pipe.x + pipeWidth < 0) {
+                    pipes.shift();
                 }
 
-                if (birdY - birdSize / 2 < obstacle.topHeight || birdY + birdSize / 2 > obstacle.topHeight + obstacleGap) {
-                    if (50 > obstacle.x && 50 < obstacle.x + obstacleWidth) {
+                if (birdY - birdSize / 2 < pipe.topHeight || birdY + birdSize / 2 > pipe.topHeight + pipeGap) {
+                    if (50 > pipe.x && 50 < pipe.x + pipeWidth) {
                         gameOver = true;
                     }
                 }
             });
 
-            if (performance.now() % 1000 < 16 && obstacles.length < 5) {
-                const topHeight = Math.random() * (canvas.height - obstacleGap - 50) + 50;
-                obstacles.push({ x: canvas.width, topHeight });
+            if (performance.now() - lastPipeTime > minPipeDistance) {
+                const topHeight = Math.random() * (canvas.height - pipeGap - 50) + 50;
+                pipes.push({ x: canvas.width, topHeight });
+                lastPipeTime = performance.now();
             }
         }
 
@@ -108,10 +110,10 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             updateBird();
-            updateObstacles();
+            updatePipes();
 
             drawBird();
-            drawObstacles();
+            drawPipes();
 
             if (!gameOver) {
                 requestAnimationFrame(gameLoop);
