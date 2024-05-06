@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
+    <title>Cookie Clicker</title>
     <style>
         body {
             margin: 0;
@@ -36,13 +36,53 @@
     </style>
 </head>
 <body>
-    <h1 class="title">Flappy Bird</h1>
+    <h1 class="title" id="bakeryName">Cookie Clicker</h1>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        // Game variables
+        let cookies = 0;
+        let cookieMultiplier = 1;
+        let bakeryName = "Cookie Clicker";
+        let cursorCount = 0;
+        let grandmaCount = 0;
+        let farmCount = 0;
+        let mineCount = 0;
+        let factoryCount = 0;
+        let bankCount = 0;
+        let templeCount = 0;
+
+        // Function to draw cookies
+        function drawCookie() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "brown";
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+            ctx.fillStyle = "white";
+            ctx.font = "20px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("Click Me", canvas.width / 2, canvas.height / 2 + 8);
+            ctx.fillText("Cookies: " + cookies, canvas.width / 2, 50);
+        }
+
+        // Function to handle clicking on the cookie
+        canvas.addEventListener('click', function(event) {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            if (Math.sqrt(Math.pow(x - (canvas.width / 2), 2) + Math.pow(y - (canvas.height / 2), 2)) <= 50) {
+                cookies += cookieMultiplier;
+                drawCookie();
+            }
+        });
+
+        // Function to toggle full screen
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -52,7 +92,30 @@
                 }
             }
         }
+
+        // Function to buy upgrades
+        function buyUpgrade(upgradeName, upgradePrice, upgradeMultiplier) {
+            if (cookies >= upgradePrice) {
+                cookies -= upgradePrice;
+                cookieMultiplier *= upgradeMultiplier;
+                drawCookie();
+                alert("You purchased the " + upgradeName + " upgrade!");
+            } else {
+                alert("Not enough cookies to buy upgrade!");
+            }
+        }
+
+        // Function to change bakery name
+        function changeBakeryName() {
+            bakeryName = prompt("Enter new bakery name:", bakeryName);
+            document.getElementById('bakeryName').textContent = bakeryName;
+        }
+
+        // Initial draw
+        drawCookie();
     </script>
+    <button onclick="buyUpgrade('Reinforced index finger', 100, 2)">Buy Cursor Upgrade (Cost: 100 cookies)</button>
+    <!-- Add more buttons for other upgrades -->
+    <button onclick="changeBakeryName()">Change Bakery Name</button>
 </body>
 </html>
-
