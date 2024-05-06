@@ -1,3 +1,4 @@
+/* Existing CSS styles */
 body {
     margin: 0;
     padding: 0;
@@ -19,4 +20,21 @@ h1 {
     width: 50px;
     border-top: 2px solid #888; /* Change line color */
     margin: 10px auto;
+}
+
+/* New CSS styles for boxes */
+.row {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.box {
+    width: 200px; /* Adjust box width as needed */
+    height: 150px; /* Adjust box height as needed */
+    background-color: #f5f5f5; /* Light grey background color */
+    border: 1px solid #ccc; /* Grey border */
+    margin: 0 10px; /* Adjust margin between boxes */
+    text-align: center;
+    line-height: 150px; /* Vertical centering */
 }
