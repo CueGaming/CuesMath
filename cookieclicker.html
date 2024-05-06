@@ -33,6 +33,15 @@
             cursor: pointer;
             z-index: 1;
         }
+        .upgrade-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -114,8 +123,42 @@
         // Initial draw
         drawCookie();
     </script>
-    <button onclick="buyUpgrade('Reinforced index finger', 100, 2)">Buy Cursor Upgrade (Cost: 100 cookies)</button>
-    <!-- Add more buttons for other upgrades -->
-    <button onclick="changeBakeryName()">Change Bakery Name</button>
+    <!-- Buttons to buy upgrades -->
+    <!-- Cursor upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Reinforced index finger', 100, 2)">Buy Reinforced Index Finger (Cost: 100 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Carpal tunnel prevention cream', 500, 2)">Buy Carpal Tunnel Prevention Cream (Cost: 500 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Ambidextrous', 10000, 2)">Buy Ambidextrous (Cost: 10,000 cookies)</button>
+    <!-- Add more buttons for other cursor upgrades -->
+    <!-- Grandma upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Forwards from grandma', 1000, 2)">Buy Forwards from Grandma (Cost: 1,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Steel-plated rolling pins', 5000, 2)">Buy Steel-plated Rolling Pins (Cost: 5,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Lubricated dentures', 25000, 2)">Buy Lubricated Dentures (Cost: 25,000 cookies)</button>
+    <!-- Add more buttons for other grandma upgrades -->
+    <!-- Farm upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Cheap hoes', 11000, 2)">Buy Cheap Hoes (Cost: 11,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Fertilizer', 55000, 2)">Buy Fertilizer (Cost: 55,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Cookie trees', 550000, 2)">Buy Cookie Trees (Cost: 550,000 cookies)</button>
+    <!-- Add more buttons for other farm upgrades -->
+    <!-- Mine upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Sugar gas', 120000, 2)">Buy Sugar Gas (Cost: 120,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Megadrill', 600000, 2)">Buy Megadrill (Cost: 600,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Ultradrill', 6000000, 2)">Buy Ultradrill (Cost: 6,000,000 cookies)</button>
+    <!-- Add more buttons for other mine upgrades -->
+    <!-- Factory upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Sturdier conveyor belts', 1300000, 2)">Buy Sturdier Conveyor Belts (Cost: 1,300,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Child labor', 6500000, 2)">Buy Child Labor (Cost: 6,500,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Sweatshop', 65000000, 2)">Buy Sweatshop (Cost: 65,000,000 cookies)</button>
+    <!-- Add more buttons for other factory upgrades -->
+    <!-- Bank upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Taller tellers', 14000000, 2)">Buy Taller Tellers (Cost: 14,000,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Scissor-resistant credit cards', 70000000, 2)">Buy Scissor-Resistant Credit Cards (Cost: 70,000,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Acid-proof vaults', 700000000, 2)">Buy Acid-Proof Vaults (Cost: 700,000,000 cookies)</button>
+    <!-- Add more buttons for other bank upgrades -->
+    <!-- Temple upgrades -->
+    <button class="upgrade-btn" onclick="buyUpgrade('Golden idols', 200000000, 2)">Buy Golden Idols (Cost: 200,000,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Sacrifices', 1000000000, 2)">Buy Sacrifices (Cost: 1,000,000,000 cookies)</button>
+    <button class="upgrade-btn" onclick="buyUpgrade('Delicious blessing', 10000000000, 2)">Buy Delicious Blessing (Cost: 10,000,000,000 cookies)</button>
+    <!-- Add more buttons for other temple upgrades -->
+    <button class="upgrade-btn" onclick="changeBakeryName()">Change Bakery Name</button>
 </body>
 </html>
