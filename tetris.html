@@ -47,6 +47,21 @@
         const board = [];
         const colors = ['cyan', 'blue', 'orange', 'yellow', 'green', 'purple', 'red'];
 
+        // Define Tetris shapes
+        const shapes = [
+            [[1, 1, 1, 1]], // I
+            [[1, 1, 1], [0, 1, 0]], // T
+            [[1, 1, 1], [1, 0, 0]], // L
+            [[1, 1, 1], [0, 0, 1]], // J
+            [[0, 1, 1], [1, 1, 0]], // S
+            [[1, 1], [1, 1]], // O
+            [[1, 1, 0], [0, 1, 1]] // Z
+        ];
+
+        let currentShape;
+        let currentX;
+        let currentY;
+
         function drawBlock(x, y, color) {
             ctx.fillStyle = color;
             ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
@@ -64,14 +79,73 @@
             }
         }
 
+        function drawCurrentShape() {
+            currentShape.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value) {
+                        drawBlock(currentX + x, currentY + y, colors[value - 1]);
+                    }
+                });
+            });
+        }
+
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawBoard();
-            // Add code to draw falling block
+            drawCurrentShape();
         }
 
         function update() {
-            // Add code to update game state
+            // Move current shape down
+            currentY++;
+            // Check for collision
+            if (collides()) {
+                // If collision, move shape back up
+                currentY--;
+                // Lock shape in place
+                lockShape();
+                // Check for lines to clear
+                clearLines();
+                // Generate a new shape
+                newShape();
+            }
+        }
+
+        function collides() {
+            for (let y = 0; y < currentShape.length; y++) {
+                for (let x = 0; x < currentShape[y].length; x++) {
+                    if (currentShape[y][x] && (board[currentY + y] && board[currentY + y][currentX + x]) !== 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        function lockShape() {
+            currentShape.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value) {
+                        board[currentY + y][currentX + x] = value;
+                    }
+                });
+            });
+        }
+
+        function clearLines() {
+            for (let y = boardHeight - 1; y >= 0; y--) {
+                if (board[y].every(cell => cell !== 0)) {
+                    board.splice(y, 1);
+                    board.unshift(Array(boardWidth).fill(0));
+                }
+            }
+        }
+
+        function newShape() {
+            const shapeIndex = Math.floor(Math.random() * shapes.length);
+            currentShape = shapes[shapeIndex];
+            currentX = Math.floor(boardWidth / 2) - Math.floor(currentShape[0].length / 2);
+            currentY = 0;
         }
 
         function gameLoop() {
@@ -84,6 +158,7 @@
             for (let y = 0; y < boardHeight; y++) {
                 board.push(Array(boardWidth).fill(0));
             }
+            newShape();
             gameLoop();
         }
 
