@@ -38,6 +38,9 @@
     <h1 class="title">Tetris</h1>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
     <canvas id="gameCanvas" width="300" height="600"></canvas>
+    <button onclick="moveLeft()">Left</button>
+    <button onclick="moveRight()">Right</button>
+    <button onclick="rotate()">Rotate</button>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -61,6 +64,7 @@
         let currentShape;
         let currentX;
         let currentY;
+        let gameInterval;
 
         function drawBlock(x, y, color) {
             ctx.fillStyle = color;
@@ -148,10 +152,48 @@
             currentY = 0;
         }
 
+        function moveLeft() {
+            currentX--;
+            if (collides()) {
+                currentX++;
+            }
+        }
+
+        function moveRight() {
+            currentX++;
+            if (collides()) {
+                currentX--;
+            }
+        }
+
+        function rotate() {
+            const rotatedShape = [];
+            for (let y = 0; y < currentShape[0].length; y++) {
+                let newRow = [];
+                for (let x = currentShape.length - 1; x >= 0; x--) {
+                    newRow.push(currentShape[x][y]);
+                }
+                rotatedShape.push(newRow);
+            }
+            if (!collidesWithRotation(rotatedShape)) {
+                currentShape = rotatedShape;
+            }
+        }
+
+        function collidesWithRotation(rotatedShape) {
+            for (let y = 0; y < rotatedShape.length; y++) {
+                for (let x = 0; x < rotatedShape[y].length; x++) {
+                    if (rotatedShape[y][x] && (board[currentY + y] && board[currentY + y][currentX + x]) !== 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         function gameLoop() {
             update();
             draw();
-            requestAnimationFrame(gameLoop);
         }
 
         function startGame() {
@@ -159,7 +201,7 @@
                 board.push(Array(boardWidth).fill(0));
             }
             newShape();
-            gameLoop();
+            gameInterval = setInterval(gameLoop, 500); // Adjust speed here (in milliseconds)
         }
 
         function toggleFullScreen() {
