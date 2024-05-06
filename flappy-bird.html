@@ -33,12 +33,21 @@
             cursor: pointer;
             z-index: 1;
         }
+        .score {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <h1 class="title">Flappy Bird</h1>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div class="score" id="score">Score: 0</div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -54,6 +63,7 @@
         let gameOver = false;
         let lastPipeTime = 0;
         const minPipeDistance = 1400; // Minimum distance between pipes, increased to 4 times
+        let score = 0;
 
         function drawBird() {
             ctx.fillStyle = 'yellow';
@@ -68,6 +78,17 @@
                 ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
                 ctx.fillRect(pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
             });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawBird();
+            drawPipes();
+
+            ctx.fillStyle = 'white';
+            ctx.font = '24px Arial';
+            ctx.fillText('Score: ' + score, 20, 40);
         }
 
         function updateBird() {
@@ -92,28 +113,30 @@
                         gameOver = true;
                     }
                 }
+
+                // Increment score when bird passes a pipe
+                if (pipe.x + pipeWidth < 50 && !pipe.passed) {
+                    score++;
+                    pipe.passed = true;
+                }
             });
 
             if (performance.now() - lastPipeTime > minPipeDistance) {
                 const topHeight = Math.random() * (canvas.height - pipeGap - 50) + 50;
-                pipes.push({ x: canvas.width, topHeight });
+                pipes.push({ x: canvas.width, topHeight, passed: false });
                 lastPipeTime = performance.now();
             }
         }
 
         function gameOverFunc() {
-            alert('Game Over!');
+            alert('Game Over! Your score: ' + score);
             location.reload();
         }
 
         function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             updateBird();
             updatePipes();
-
-            drawBird();
-            drawPipes();
+            draw();
 
             if (!gameOver) {
                 requestAnimationFrame(gameLoop);
