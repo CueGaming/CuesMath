@@ -54,7 +54,7 @@
         const birdSize = 30;
         let birdY = canvas.height / 2;
         let birdSpeedY = 0;
-        const gravity = 1;
+        const gravity = 0.9;
         const jump = -8;
         let pipes = [];
         const pipeWidth = 50;
@@ -62,7 +62,7 @@
         const pipeSpeed = 2;
         let gameOver = false;
         let lastPipeTime = 0;
-        const minPipeDistance = 1400; // Minimum distance between pipes, increased to 4 times
+        const minPipeDistance = 2500; // Minimum distance between pipes, increased to 4 times
         let score = 0;
 
         function drawBird() {
