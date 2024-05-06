@@ -9,6 +9,8 @@
             border: 1px solid black;
             display: block;
             margin: auto;
+            background-image: url('background.png'); /* Replace 'background.png' with the path to your background image */
+            background-size: cover;
         }
     </style>
 </head>
@@ -17,39 +19,81 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-
+        const birdSize = 30;
         let birdY = canvas.height / 2;
         let birdSpeedY = 0;
         const gravity = 0.5;
         const jump = -8;
+        let obstacles = [];
+        const obstacleWidth = 50;
+        const obstacleGap = 200;
+        const obstacleSpeed = 2;
         let gameOver = false;
 
         function drawBird() {
             ctx.fillStyle = 'yellow';
             ctx.beginPath();
-            ctx.arc(50, birdY, 20, 0, Math.PI * 2);
+            ctx.arc(50, birdY, birdSize / 2, 0, Math.PI * 2);
             ctx.fill();
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = 'green';
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, 0, obstacleWidth, obstacle.topHeight);
+                ctx.fillRect(obstacle.x, obstacle.topHeight + obstacleGap, obstacleWidth, canvas.height - obstacle.topHeight - obstacleGap);
+            });
         }
 
         function updateBird() {
             birdSpeedY += gravity;
             birdY += birdSpeedY;
 
-            if (birdY < 0 || birdY > canvas.height) {
+            if (birdY < 0 || birdY + birdSize / 2 > canvas.height) {
                 gameOver = true;
             }
+        }
+
+        function updateObstacles() {
+            obstacles.forEach(obstacle => {
+                obstacle.x -= obstacleSpeed;
+
+                if (obstacle.x + obstacleWidth < 0) {
+                    obstacles.shift();
+                }
+
+                if (birdY - birdSize / 2 < obstacle.topHeight || birdY + birdSize / 2 > obstacle.topHeight + obstacleGap) {
+                    if (50 > obstacle.x && 50 < obstacle.x + obstacleWidth) {
+                        gameOver = true;
+                    }
+                }
+            });
+
+            if (performance.now() % 1000 < 16 && obstacles.length < 5) {
+                const topHeight = Math.random() * (canvas.height - obstacleGap - 50) + 50;
+                obstacles.push({ x: canvas.width, topHeight });
+            }
+        }
+
+        function gameOverFunc() {
+            alert('Game Over!');
+            location.reload();
         }
 
         function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            if (!gameOver) {
-                updateBird();
-            }
+            updateBird();
+            updateObstacles();
 
             drawBird();
+            drawObstacles();
 
-            requestAnimationFrame(gameLoop);
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            } else {
+                gameOverFunc();
+            }
         }
 
         function flap() {
