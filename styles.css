@@ -25,16 +25,28 @@ h1 {
 /* New CSS styles for boxes */
 .row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     margin-top: 20px;
 }
 
 .box {
     width: 200px; /* Adjust box width as needed */
-    height: 150px; /* Adjust box height as needed */
+    height: 200px; /* Adjust box height as needed */
     background-color: #f5f5f5; /* Light grey background color */
     border: 1px solid #ccc; /* Grey border */
-    margin: 0 10px; /* Adjust margin between boxes */
+    margin: 10px; /* Adjust margin between boxes */
     text-align: center;
-    line-height: 150px; /* Vertical centering */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.box:hover {
+    background-color: #e0e0e0; /* Lighter grey on hover */
+}
+
+.box:active {
+    transform: scale(0.95); /* Add a slight scale down effect when clicked */
 }
