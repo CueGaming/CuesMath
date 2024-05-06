@@ -180,6 +180,7 @@
         function updateCookieCounter(value) {
             const counter = document.getElementById('cookieCounter');
             counter.textContent = value;
+            // Trigger animation
             counter.classList.remove('cookie-counter-animation');
             void counter.offsetWidth; // Trigger reflow to restart animation
             counter.classList.add('cookie-counter-animation');
