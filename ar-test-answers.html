@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuesMath</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        .book-request-link {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,14 +25,14 @@
     </header>
 
     <div class="row">
-        <!-- Replace this with a link -->
-        <a href="discord.gg/bqM4tJgaYh" class="box">Give Book Requests</a>
         <div class="box" onclick="goToGame('hungergames')">Hunger Games MockingJay</div>
         <div class="box" onclick="goToGame('refugee')">Refugee</div>
         <!-- Add more games as needed -->
     </div>
 
     <!-- Your website content goes here -->
+
+    <a href="https://discord.gg/bqM4tJgaYh" class="book-request-link">Give Book Requests</a>
 
     <script>
         function goToGame(gameName) {
