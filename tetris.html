@@ -5,17 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tetris</title>
     <style>
-        /* CSS styles for the game */
-        /* Add your styles here */
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
-    <!-- Tetris game content -->
-    <canvas id="tetrisCanvas" width="400" height="600"></canvas>
-
+    <canvas id="gameCanvas" width="300" height="600"></canvas>
     <script>
-        // JavaScript code for Tetris game
-        // Add your game logic here
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const blockSize = 30;
+        const boardWidth = 10;
+        const boardHeight = 20;
+        const boardColor = '#f0f0f0';
+        const blockColor = '#333';
+
+        let board = [];
+        let currentPiece;
+        let gameOver = false;
+
+        // Initialize the game board
+        function initBoard() {
+            for (let row = 0; row < boardHeight; row++) {
+                board[row] = [];
+                for (let col = 0; col < boardWidth; col++) {
+                    board[row][col] = 0;
+                }
+            }
+        }
+
+        // Draw the game board
+        function drawBoard() {
+            ctx.fillStyle = boardColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let row = 0; row < boardHeight; row++) {
+                for (let col = 0; col < boardWidth; col++) {
+                    if (board[row][col]) {
+                        ctx.fillStyle = blockColor;
+                        ctx.fillRect(col * blockSize, row * blockSize, blockSize, blockSize);
+                    }
+                }
+            }
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (!gameOver) {
+                update();
+                draw();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Update game state
+        function update() {
+            // Update logic here
+        }
+
+        // Draw game elements
+        function draw() {
+            drawBoard();
+            // Draw other game elements here
+        }
+
+        // Start the game
+        function startGame() {
+            initBoard();
+            gameLoop();
+        }
+
+        // Start the game when the window loads
+        window.onload = startGame;
     </script>
 </body>
 </html>
