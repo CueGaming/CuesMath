@@ -99,6 +99,9 @@
 </head>
 <body>
     <h1 class="title" id="bakeryName">Cookie Clicker</h1>
+    <!-- Add a text input field for bakery name -->
+    <input type="text" id="bakeryNameInput" placeholder="Enter Bakery Name">
+    <button onclick="setBakeryName()">Set Bakery Name</button>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
     <div class="upgrade-container">
         <!-- Buttons to buy upgrades -->
@@ -193,6 +196,19 @@
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
                 }
+            }
+        }
+
+        // Function to set bakery name
+        function setBakeryName() {
+            const bakeryNameInput = document.getElementById('bakeryNameInput');
+            const newBakeryName = bakeryNameInput.value.trim();
+            if (newBakeryName !== '') {
+                bakeryName = newBakeryName;
+                document.getElementById('bakeryName').textContent = newBakeryName;
+                bakeryNameInput.value = ''; // Clear the input field
+            } else {
+                alert('Please enter a valid bakery name.');
             }
         }
 
