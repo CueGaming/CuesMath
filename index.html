@@ -1,33 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CuesMath</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="style.css">
+    <title>2048 Game</title>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Made By CueGaming</h1>
-            <hr class="line">
-        </div>
-    </header>
 
-    <div class="row">
-        <div class="box" onclick="goToGame('flappy-bird')">Flappy Bird</div>
-        <div class="box" onclick="goToGame('tetris')">Tetris</div>
-        <div class="box" onclick="goToGame('cookieclicker')">Cookie Clicker</div>
-        <div class="box" onclick="goToGame('ar-test-answers')">AR Test Answers</div>
-        <!-- Add more games as needed -->
+<body>
+
+    <div class="score-container">
+        <div>Score : <span id="current-score">0</span></div>
+        <div>High Score : <span id="high-score">0</span></div>
     </div>
 
-    <!-- Your website content goes here -->
+    <div class="game-container">
+        <div class="grid">
+            <div class="cell" data-row="0" data-col="0"></div>
+            <div class="cell" data-row="0" data-col="1"></div>
+            <div class="cell" data-row="0" data-col="2"></div>
+            <div class="cell" data-row="0" data-col="3"></div>
+            <div class="cell" data-row="1" data-col="0"></div>
+            <div class="cell" data-row="1" data-col="1"></div>
+            <div class="cell" data-row="1" data-col="2"></div>
+            <div class="cell" data-row="1" data-col="3"></div>
+            <div class="cell" data-row="2" data-col="0"></div>
+            <div class="cell" data-row="2" data-col="1"></div>
+            <div class="cell" data-row="2" data-col="2"></div>
+            <div class="cell" data-row="2" data-col="3"></div>
+            <div class="cell" data-row="3" data-col="0"></div>
+            <div class="cell" data-row="3" data-col="1"></div>
+            <div class="cell" data-row="3" data-col="2"></div>
+            <div class="cell" data-row="3" data-col="3"></div>
+        </div>
+    </div>
 
-    <script>
-        function goToGame(gameName) {
-            window.location.href = gameName + '.html';
-        }
-    </script>
+    <div id="game-over">
+        Game Over!
+        <button id="restart-btn">Restart Game</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
