@@ -72,6 +72,15 @@
             pointer-events: none;
             animation: celebrate 1.5s ease-in-out;
         }
+        .cookie-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Cookie', cursive;
+            font-size: 36px;
+            color: white;
+            z-index: 1;
+        }
         @keyframes celebrate {
             0% {
                 transform: translate(-50%, -50%) scale(1);
@@ -117,6 +126,7 @@
     </div>
     <canvas id="gameCanvas" width="400" height="600" onclick="updateCookies()"></canvas>
     <div class="celebration-animation" id="celebrationAnimation"></div>
+    <div class="cookie-counter" id="cookieCounter">0 cookies</div>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -135,6 +145,7 @@
         // Function to update cookies
         function updateCookies() {
             cookies += cookieMultiplier;
+            document.getElementById('cookieCounter').textContent = cookies + " cookies";
             drawCookie();
             checkMilestone();
         }
@@ -144,6 +155,7 @@
             if (cookies >= cost) {
                 cookies -= cost;
                 cookieMultiplier += multiplier;
+                document.getElementById('cookieCounter').textContent = cookies + " cookies";
                 drawCookie();
                 checkMilestone();
                 console.log("Bought " + upgradeName);
@@ -165,11 +177,11 @@
 
         // Function to display celebration animation
         function celebrate(message) {
-            const celebration = document.getElementById('celebrationAnimation');
-            celebration.textContent = message;
-            celebration.style.opacity = 1;
+            const celebrationAnimation = document.getElementById('celebrationAnimation');
+            celebrationAnimation.textContent = message;
+            celebrationAnimation.style.opacity = 1;
             setTimeout(() => {
-                celebration.style.opacity = 0;
+                celebrationAnimation.style.opacity = 0;
             }, 1500);
         }
 
@@ -184,7 +196,6 @@
             }
         }
 
-        // Initial draw
         drawCookie();
     </script>
 </body>
