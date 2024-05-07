@@ -99,7 +99,6 @@
 </head>
 <body>
     <h1 class="title" id="bakeryName">Cookie Clicker</h1>
-    <!-- Add a text input field for bakery name -->
     <input type="text" id="bakeryNameInput" placeholder="Enter Bakery Name">
     <button onclick="setBakeryName()">Set Bakery Name</button>
     <button class="fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
@@ -134,10 +133,10 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Game variables
-        let cookies = 0;
-        let cookieMultiplier = 1;
-        let bakeryName = "Cookie Clicker";
+        // Load game progress from local storage or set default values
+        let cookies = parseInt(localStorage.getItem('cookies')) || 0;
+        let cookieMultiplier = parseInt(localStorage.getItem('cookieMultiplier')) || 1;
+        let bakeryName = localStorage.getItem('bakeryName') || "Cookie Clicker";
 
         // Function to draw cookies
         function drawCookie() {
@@ -206,11 +205,25 @@
             if (newBakeryName !== '') {
                 bakeryName = newBakeryName;
                 document.getElementById('bakeryName').textContent = newBakeryName;
+                localStorage.setItem('bakeryName', newBakeryName); // Save bakery name to local storage
                 bakeryNameInput.value = ''; // Clear the input field
             } else {
                 alert('Please enter a valid bakery name.');
             }
         }
+
+        // Function to save game progress
+        function saveProgress() {
+            localStorage.setItem('cookies', cookies);
+            localStorage.setItem('cookieMultiplier', cookieMultiplier);
+            localStorage.setItem('bakeryName', bakeryName);
+        }
+
+        // Save progress periodically
+        setInterval(saveProgress, 10000); // Save every 10 seconds
+
+        // Load bakery name
+        document.getElementById('bakeryName').textContent = bakeryName;
 
         drawCookie();
     </script>
