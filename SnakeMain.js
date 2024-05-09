@@ -29,27 +29,48 @@ const handleGameOver = () => {
     location.reload();
 }
 
-// Change velocity value based on key press
+// Change velocity value based on touch direction
 
-const changeDirection = e => {
-    if (e.key === "ArrowUp" && velocityY != 1) {
+const changeDirection = (x, y) => {
+    if (x === 0 && y === -1 && velocityY != 1) { // swipe up
         velocityX = 0;
         velocityY = -1;
-    } else if (e.key === "ArrowDown" && velocityY != -1) {
+    } else if (x === 0 && y === 1 && velocityY != -1) { // swipe down
         velocityX = 0;
         velocityY = 1;
-    } else if (e.key === "ArrowLeft" && velocityX != 1) {
+    } else if (x === -1 && y === 0 && velocityX != 1) { // swipe left
         velocityX = -1;
         velocityY = 0;
-    } else if (e.key === "ArrowRight" && velocityX != -1) {
+    } else if (x === 1 && y === 0 && velocityX != -1) { // swipe right
         velocityX = 1;
         velocityY = 0;
     }
 }
 
-// Change Direction on each key click
+// Add touch event listeners to control the snake's movement
 
-controls.forEach(button => button.addEventListener("click", () => changeDirection({ key: button.dataset.key })));
+playBoard.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    const touchStartX = e.touches[0].clientX;
+    const touchStartY = e.touches[0].clientY;
+
+    playBoard.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // Horizontal swipe
+            changeDirection(diffX > 0 ? 1 : -1, 0);
+        } else {
+            // Vertical swipe
+            changeDirection(0, diffY > 0 ? 1 : -1);
+        }
+    });
+});
 
 const initGame = () => {
     if (gameOver) return handleGameOver();
@@ -99,4 +120,3 @@ const initGame = () => {
 
 updateFoodPosition();
 setIntervalId = setInterval(initGame, 100);
-document.addEventListener("keyup", changeDirection);
